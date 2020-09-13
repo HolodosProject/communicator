@@ -8,8 +8,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "food")
@@ -21,9 +21,11 @@ public class Food implements Serializable {
 
     private String name;
 
+    private int quantity;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private AppUser owner;
+    private Board board;
 
 }
