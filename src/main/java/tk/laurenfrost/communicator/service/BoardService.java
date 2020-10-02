@@ -5,62 +5,65 @@ import org.springframework.stereotype.Service;
 import tk.laurenfrost.communicator.entity.Board;
 import tk.laurenfrost.communicator.entity.Food;
 import tk.laurenfrost.communicator.repository.BoardRepository;
+import tk.laurenfrost.communicator.repository.FoodRepository;
 
-import java.util.Iterator;
+import java.util.UUID;
 
 @Service
 public class BoardService {
 
     private BoardRepository boardRepository;
+    private FoodRepository foodRepository;
 
     @Autowired
     public void setBoardRepository(BoardRepository repository) {
         this.boardRepository = repository;
     }
 
-    public void createBoard(String id) {
-        Board board = new Board();
-        board.setMacAddress(id);
-        this.boardRepository.save(board);
+    @Autowired
+    public void setFoodRepository(FoodRepository repository) {
+        this.foodRepository = repository;
     }
 
-    public void deleteBoard(String id) {
+    public UUID createBoard(String id) {
+        Board board = this.boardRepository.getBoardByMacAddress(id);
+        if (board != null)
+            return board.getId();
+        board = new Board();
+        board.setMacAddress(id);
+        this.boardRepository.save(board);
+        return board.getId();
+    }
+
+    public void deleteBoard(UUID id) {
+        clearBoardFoodList(id);
         this.boardRepository.deleteById(id);
     }
 
-    public void clearBoardFoodList(String id) {
-        Board board = this.boardRepository.getOne(id);
-        board.getFoodList().clear();
-        this.boardRepository.save(board);
+    public void clearBoardFoodList(UUID id) {
+        this.boardRepository.clearBoardList(getBoardById(id));
     }
 
-    public void addFood(String boardId, String foodName) {
+    public UUID addFood(UUID boardId, String foodName) {
         Board board = this.boardRepository.getOne(boardId);
-        boolean exists = false;
         for (Food food : board.getFoodList()) {
             if (food.getName().equals(foodName)) {
-                food.setQuantity(food.getQuantity()+1);
-                exists = true;
-                break;
+                food.setQuantity(food.getQuantity() + 1);
+                foodRepository.save(food);
+                return food.getId();
             }
         }
-        if (!exists) {
-            Food newFood = new Food();
-            newFood.setName(foodName);
-            newFood.setQuantity(1);
-            board.getFoodList().add(newFood);
-        }
-        this.boardRepository.save(board);
+        Food newFood = new Food();
+        newFood.setName(foodName);
+        newFood.setQuantity(1);
+        newFood.setBoard(board);
+        board.getFoodList().add(newFood);
+        foodRepository.save(newFood);
+        return newFood.getId();
     }
 
-    public Board getBoardById(String id) {
+    public Board getBoardById(UUID id) {
         return this.boardRepository.getOne(id);
-    }
-
-    public void deleteAllFoodByName(String boardId, String foodName) {
-        Board board =this.boardRepository.getOne(boardId);
-        board.getFoodList().removeIf(food -> food.getName().equals(foodName));
-        this.boardRepository.save(board);
     }
 
 }
