@@ -1,6 +1,5 @@
 package tk.laurenfrost.communicator.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +26,6 @@ public class Food implements Serializable {
 
     private int quantity;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn
     private Board board;
