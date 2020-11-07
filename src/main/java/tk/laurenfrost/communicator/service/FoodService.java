@@ -27,8 +27,7 @@ public class FoodService {
             Board board = this.foodRepository.getOne(food.getId()).getBoard();
             food.setBoard(board);
         }
-        this.foodRepository.save(food);
-        return food;
+        return this.foodRepository.save(food);
     }
 
     public Food createFood(Food food) {

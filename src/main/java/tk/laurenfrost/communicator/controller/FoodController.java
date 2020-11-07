@@ -26,13 +26,13 @@ public class FoodController {
         return this.foodService.createFood(food);
     }
 
-    @DeleteMapping(value = "/{food}")
-    public ResponseEntity<?> deleteFood(@PathVariable String food) {
-        this.foodService.deleteFood(UUID.fromString(food));
+    @DeleteMapping(value = "/{foodId}")
+    public ResponseEntity<?> deleteFood(@PathVariable String foodId) {
+        this.foodService.deleteFood(UUID.fromString(foodId));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PatchMapping
+    @PatchMapping(value = "/{foodId}")
     public Food patchFood(@RequestBody Food food) {
         return this.foodService.saveFood(food);
     }
