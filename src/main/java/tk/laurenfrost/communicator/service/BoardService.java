@@ -21,8 +21,7 @@ public class BoardService {
         Board oldBoard = this.boardRepository.getBoardByMacAddress(board.getMacAddress());
         if (oldBoard != null)
             return oldBoard;
-        this.boardRepository.save(board);
-        return board;
+        return this.boardRepository.save(board);
     }
 
     public void deleteBoard(UUID id) {
