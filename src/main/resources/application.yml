@@ -12,3 +12,7 @@ spring:
     username:
     password:
     url: jdbc:postgresql://laurenfrost.tk:5432/holodos
+mqtt:
+  username:
+  password:
+  brokerUri: tcp://laurenfrost.tk:1883
