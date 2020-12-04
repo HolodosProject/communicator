@@ -11,8 +11,8 @@ spring:
     driver-class-name: org.postgresql.Driver
     username:
     password:
-    url: jdbc:postgresql://laurenfrost.tk:5432/holodos
+    url: jdbc:postgresql://meier.cf:5432/holodos
 mqtt:
   username:
   password:
-  brokerUri: tcp://laurenfrost.tk:1883
+  brokerUri: tcp://meier.cf:1883
