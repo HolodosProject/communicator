@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import tk.laurenfrost.communicator.entity.Board;
 import tk.laurenfrost.communicator.repository.BoardRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -35,6 +36,10 @@ public class BoardService {
 
     public Board getBoardById(UUID id) {
         return this.boardRepository.getOne(id);
+    }
+
+    public List<Board> loadAllBoards() {
+        return this.boardRepository.findAll();
     }
 
 }

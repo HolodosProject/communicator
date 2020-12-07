@@ -3,10 +3,13 @@ package tk.laurenfrost.communicator.mqtt;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import tk.laurenfrost.communicator.service.BoardService;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -24,8 +27,15 @@ public final class MqttService {
     @Value("${mqtt.brokerUri}")
     private String brokerUri;
 
+    private BoardService boardService;
+
     private final Map<String, MqttSubscriber> subscribers = new HashMap<>();
     private MqttClient client;
+
+    @Autowired
+    public void setBoardService(BoardService service) {
+        this.boardService = service;
+    }
 
     @PostConstruct
     public void init() {
@@ -36,8 +46,9 @@ public final class MqttService {
         options.setCleanSession(false);
         options.setServerURIs(new String[]{brokerUri});
         try {
-            client = new MqttClient(brokerUri, MqttClient.generateClientId());
+            client = new MqttClient(brokerUri, MqttClient.generateClientId(), new MemoryPersistence());
             client.connect(options);
+            this.boardService.loadAllBoards().forEach(board -> listenBoard(board.getMacAddress()));
         } catch (MqttException error) {
             logger.error(error.getMessage(), error);
         }
