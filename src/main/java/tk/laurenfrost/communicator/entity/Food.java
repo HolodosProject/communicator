@@ -30,4 +30,8 @@ public class Food implements Serializable {
     @JoinColumn
     private Board board;
 
+    public Food(String name, Board board) {
+        this.name = name;
+        this.board = board;
+    }
 }
