@@ -26,6 +26,8 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	compile 'com.google.cloud:google-cloud-speech:1.24.7'
+	compile 'com.google.cloud:google-cloud-language:1.101.6'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
