@@ -16,3 +16,11 @@ mqtt:
   username:
   password:
   brokerUri: tcp://meier.cf:1883
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %-35logger{35} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+  level:
+    root: WARN
+    tk.laurenfrost.communicator: DEBUG

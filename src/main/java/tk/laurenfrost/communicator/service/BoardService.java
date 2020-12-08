@@ -38,6 +38,10 @@ public class BoardService {
         return this.boardRepository.getOne(id);
     }
 
+    public Board getBoardByTopic(String topic) {
+        return this.boardRepository.getBoardByMacAddress(topic);
+    }
+
     public List<Board> loadAllBoards() {
         return this.boardRepository.findAll();
     }

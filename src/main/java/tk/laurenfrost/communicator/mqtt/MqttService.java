@@ -1,5 +1,7 @@
 package tk.laurenfrost.communicator.mqtt;
 
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -10,12 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tk.laurenfrost.communicator.service.BoardService;
+import tk.laurenfrost.communicator.service.FoodService;
+import tk.laurenfrost.communicator.service.SpeechToFoodService;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public final class MqttService {
 
     Logger logger = LoggerFactory.getLogger(MqttService.class);
@@ -27,15 +32,12 @@ public final class MqttService {
     @Value("${mqtt.brokerUri}")
     private String brokerUri;
 
-    private BoardService boardService;
+    private final BoardService boardService;
+    private final SpeechToFoodService speechToFoodService;
+    private final FoodService foodService;
 
     private final Map<String, MqttSubscriber> subscribers = new HashMap<>();
     private MqttClient client;
-
-    @Autowired
-    public void setBoardService(BoardService service) {
-        this.boardService = service;
-    }
 
     @PostConstruct
     public void init() {
@@ -56,10 +58,11 @@ public final class MqttService {
 
     public void listenBoard(String boardName) {
         if (!subscribers.containsKey(boardName)) {
-            MqttSubscriber subscriber = new MqttSubscriber();
+            MqttSubscriber subscriber = new MqttSubscriber(speechToFoodService, foodService, boardService);
             try {
                 client.subscribe(boardName, subscriber);
                 subscribers.put(boardName, subscriber);
+                logger.info("Subscribed to " + boardName);
             } catch (MqttException error) {
                 logger.error(error.getMessage(), error);
             }
@@ -77,5 +80,4 @@ public final class MqttService {
             }
         }
     }
-
 }
