@@ -31,17 +31,13 @@ public class FoodService {
     }
 
     public Food createFood(Food food) {
-        Food savedFood;
-        Optional<Food> foodInList =
-                food.getBoard().getFoodList().stream().filter(food1 -> food1.getName().equals(food.getName()))
-                        .findFirst();
-        if (foodInList.isEmpty()) {
+        Food savedFood = this.foodRepository.getByNameAndBoard(food.getName(), food.getBoard());
+        if (savedFood == null) {
             this.foodRepository.save(food);
             logger.debug("Added " + food.getName() + " to " + food.getBoard().getMacAddress() + "'s list");
             savedFood = food;
         } else {
             logger.debug(food.getName() + " is already present in " + food.getBoard().getMacAddress() + "'s list");
-            savedFood = foodInList.get();
         }
         return savedFood;
     }
