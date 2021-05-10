@@ -11,6 +11,8 @@ import java.util.UUID;
 @Service
 public class BoardService {
 
+public String kek = "kek";
+
     private BoardRepository boardRepository;
 
     @Autowired

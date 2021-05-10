@@ -7,14 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import tk.laurenfrost.communicator.service.SpeechToFoodService;
 
 import java.io.IOException;
 
 @SpringBootApplication
 public class CommunicatorApplication {
 	static Logger logger = LoggerFactory.getLogger(CommunicatorApplication.class);
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(CommunicatorApplication.class, args);
